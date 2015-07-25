@@ -1,3 +1,15 @@
+/*
+
+Gaussian Background Generator
+
+Version:    0.1
+Author:     Aiden Foxx
+Contact:    admin@foxx.io
+Website:    http://foxx.io/gaussian
+Twitter:    @furiousfoxx
+
+*/
+
 'use strict';
 
 var gaussianBackground = {
@@ -27,8 +39,8 @@ var gaussianBackground = {
         blurMethod : 'stackblur',
         blurIterations : 0,
         animation : true,
-        renderX : 320,
-        renderY : 130,
+        renderWidth : 320,
+        renderHeight : 130,
         layers : {
 
         }
@@ -51,8 +63,8 @@ var gaussianBackground = {
             return false;
         }
 
-        gaussianBackground.canvas.width = gaussianBackground.settings.renderX;
-        gaussianBackground.canvas.height = gaussianBackground.settings.renderY;
+        gaussianBackground.canvas.width = gaussianBackground.settings.renderWidth;
+        gaussianBackground.canvas.height = gaussianBackground.settings.renderHeight;
 
         gaussianBackground.defineLayers(gaussianBackground.settings.layers);
 
@@ -81,8 +93,8 @@ var gaussianBackground = {
     {
         var canvas = document.createElement('canvas');
 
-        canvas.width = gaussianBackground.settings.renderX;
-        canvas.height = gaussianBackground.settings.renderY;
+        canvas.width = gaussianBackground.settings.renderWidth;
+        canvas.height = gaussianBackground.settings.renderHeight;
 
         var layer = {
             animation : {},
@@ -95,8 +107,8 @@ var gaussianBackground = {
         {
             layer.animation[i] = {
                 radius : radius,
-                posX : Math.round(Math.random() * gaussianBackground.settings.renderX),
-                posY : Math.round(Math.random() * gaussianBackground.settings.renderY),
+                posX : Math.round(Math.random() * gaussianBackground.settings.renderWidth),
+                posY : Math.round(Math.random() * gaussianBackground.settings.renderHeight),
                 // Give is a random velocity to make the animation a bit more interesting
                 velX : Math.round(Math.random()) ? Math.random() * maxVelocity : -(Math.random() * maxVelocity), 
                 velY : Math.round(Math.random()) ? Math.random() * maxVelocity : -(Math.random() * maxVelocity)
@@ -150,8 +162,8 @@ var gaussianBackground = {
 
     drawBackground : function()
     {
-        var renderX = gaussianBackground.settings.renderX;
-        var renderY = gaussianBackground.settings.renderY;
+        var renderWidth = gaussianBackground.settings.renderWidth;
+        var renderHeight = gaussianBackground.settings.renderHeight;
 
         for (var i = Object.keys(gaussianBackground.layers).length - 1; i >= 0; i--)
         {
@@ -161,7 +173,7 @@ var gaussianBackground = {
 
             // Draw background
             context.fillStyle = gaussianBackground.layers[i].color;
-            context.fillRect(0, 0, renderX, renderY);
+            context.fillRect(0, 0, renderWidth, renderHeight);
 
             // Draw animated layer elements
             for (var x = Object.keys(animation).length - 1; x >= 0; x--)
@@ -171,9 +183,9 @@ var gaussianBackground = {
                 animation[x].posY += animation[x].velY;
 
                 // If the animation is leaving the viweport reverse it
-                if (animation[x].posX >= renderX || animation[x].posX <= 0)
+                if (animation[x].posX >= renderWidth || animation[x].posX <= 0)
                     animation[x].velX = -animation[x].velX;
-                if (animation[x].posY >= renderY || animation[x].posY <= 0)
+                if (animation[x].posY >= renderHeight || animation[x].posY <= 0)
                     animation[x].velY = -animation[x].velY;
 
                 context.save();
@@ -192,27 +204,27 @@ var gaussianBackground = {
     drawBlur : function()
     {
         var canvasID = gaussianBackground.settings.canvasID;
-        var renderX = gaussianBackground.settings.renderX;
-        var renderY = gaussianBackground.settings.renderY;
+        var renderWidth = gaussianBackground.settings.renderWidth;
+        var renderHeight = gaussianBackground.settings.renderHeight;
         var blurRadius = gaussianBackground.settings.blurRadius;
         var blurIterations = gaussianBackground.settings.blurIterations;
 
         switch (gaussianBackground.settings.blurMethod)
         {
             case 'stackblur':
-                stackBlurCanvasRGB(canvasID, 0, 0, renderX, renderY, blurRadius);
+                stackBlurCanvasRGB(canvasID, 0, 0, renderWidth, renderHeight, blurRadius);
                 break;
 
             case 'fastblur':
-                boxBlurCanvasRGB(canvasID, 0, 0, renderX, renderY, blurRadius, blurIterations);
+                boxBlurCanvasRGB(canvasID, 0, 0, renderWidth, renderHeight, blurRadius, blurIterations);
                 break;
 
             case 'integralblur':
-                integralBlurCanvasRGB(canvasID, 0, 0, renderX, renderY, blurRadius, blurIterations);
+                integralBlurCanvasRGB(canvasID, 0, 0, renderWidth, renderHeight, blurRadius, blurIterations);
                 break;
 
             case 'stackboxblur':
-                stackBoxBlurCanvasRGB(canvasID, 0, 0, renderX, renderY, blurRadius, blurIterations);
+                stackBoxBlurCanvasRGB(canvasID, 0, 0, renderWidth, renderHeight, blurRadius, blurIterations);
                 break;
         }
     },
@@ -239,8 +251,8 @@ var gaussianBackground = {
     generateDebugDisplay : function()
     {
         return (gaussianBackground.settings.animation ? 'Average FPS: ' + Math.round(gaussianBackground.fpsAverage) : '') + 
-               '<br />Render Width: ' + gaussianBackground.settings.renderX + 'px' +
-               '<br />Render Height: ' + gaussianBackground.settings.renderY + 'px' + 
+               '<br />Render Width: ' + gaussianBackground.settings.renderWidth + 'px' +
+               '<br />Render Height: ' + gaussianBackground.settings.renderHeight + 'px' + 
                '<br />Layers: ' + Object.keys(gaussianBackground.settings.layers).length + 
                '<br />Animation: ' + (gaussianBackground.settings.animation ? 'Yes' : 'No') + 
                (gaussianBackground.settings.blur ? '<br />Blur Algorithm: ' + gaussianBackground.settings.blurMethod : '') +

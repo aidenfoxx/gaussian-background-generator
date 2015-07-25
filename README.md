@@ -42,7 +42,7 @@ All avalible options are:
 - It is better to use a lower render width/height due to performance. Because of the bluring the quality will appear almost identical once scaled up.
 
 # Requirements
-The script relies on Mario Klingemanns StackBlur, FastBlur, IntegralBlur or StackBoxBlur plugin (http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html).
+If blur is enabled, the script relies on Mario Klingemanns StackBlur, FastBlur, IntegralBlur or StackBoxBlur plugin (http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html).
 
 ## Outstanding Issues
 - Make the script easier implemented. Possibly convert to OOP or a jQuery plugin

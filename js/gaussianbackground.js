@@ -2,7 +2,7 @@
 
 Gaussian Background Generator
 
-Version:    0.1
+Version:    0.2
 Author:     Aiden Foxx
 Contact:    admin@foxx.io
 Website:    http://foxx.io/gaussian

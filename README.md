@@ -36,7 +36,6 @@ All avalible options are:
 
 ```javascript
 var options = {
-    canvasID : null,
     debug : false,
     blur : true,
     blurRadius : 50,

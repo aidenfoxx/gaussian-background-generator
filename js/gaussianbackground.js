@@ -29,7 +29,6 @@ function GaussianBackground(id, layers, options)
 	this.layers = {};
 
 	this.options = {
-	    canvasID : null,
 	    debug : false,
 	    blur : true,
 	    blurRadius : 50,

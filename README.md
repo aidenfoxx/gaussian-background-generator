@@ -10,7 +10,7 @@ The script works by cutting circles from multiple stacked canvas layers and then
 The script accepts a number of parameters:
 
 ```javascript
-gaussianBackground.init(elementID, layers, options);
+var background = GaussianBackground(elementID, layers, options);
 ```
 
 The layers parameter accepts an array/object of display layers using the following syntax:
@@ -44,6 +44,26 @@ var options = {
     renderWidth : 320,
     renderHeight : 130
 };
+```
+
+### Object Methods
+
+The created object has a number of public methods:
+
+```javascript
+var background = GaussianBackground(elementID, layers, options);
+
+// Pauses the animation
+background.pause();
+
+// Play the animation
+background.play();
+
+// Update the display layers of the object
+background.updateLayers(layers);
+
+// Update the options of the object
+background.updateOptions(options);
 ```
 
 ### Notes:

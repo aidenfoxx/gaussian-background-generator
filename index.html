@@ -10,12 +10,24 @@
 			height: 100%;
 		}
 
-		#background {
+		#background, #background2 {
 			display: block;
 			width: 100%;
 			height: 100%;
 			padding: 0;
 			margin: 0;
+			float: left;
+		}
+
+		#overlay {
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-image: url(./img/overlay.png);
+			opacity: .4;
 		}
 	</style>
 	<script src="./js/vendor/stackblur.js"></script>
@@ -24,18 +36,16 @@
 	<!--<script src="./js/vendor/stackboxblur.js"></script>-->
 	<script src="./js/gaussianbackground.js"></script>
 	<script>
+		var gaussianBackground;
+
 		function load()
 		{
-			gaussianBackground.init({
-				canvasID : 'background',
-				debug : true,
-				layers : {
-					0 : { circles : 2, radius : 130, maxVelocity : 2, color : '#6c80c7' },
-					1 : { circles : 3, radius : 80, maxVelocity : 2, color : '#803a93' },
-					2 : { circles : 5, radius : 50, maxVelocity : 2, color : '#5a58b9' },
-					3 : { color : '#9eaee1' }
-				}
-			});
+			var layers = [{ orbs : 2, radius : 130, maxVelocity : 1, color : '#6c80c7' },
+						  { orbs : 3, radius : 80, maxVelocity : 1, color : '#803a93' },
+						  { orbs : 5, radius : 50, maxVelocity : 1, color : '#5a58b9' },
+						  { color : '#9eaee1' }];
+
+			gaussianBackground = new GaussianBackground('background', layers, { debug : true, fpsCap : 20 });
 		}
 	</script>
 </head>

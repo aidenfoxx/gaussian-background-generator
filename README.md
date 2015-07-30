@@ -16,7 +16,7 @@ The script accepts a number of parameters:
 var background = GaussianBackground(elementID, layers, options);
 ```
 
-The layers parameter accepts an array/object of display layers using the following syntax:
+The layers parameter requires an array/object of display layers using the following syntax:
 
 ```javascript
 var layers = [

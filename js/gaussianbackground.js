@@ -14,6 +14,11 @@ Twitter:    @furiousfoxx
 
 function GaussianBackground(id, layers, options)
 {
+    if (!(this instanceof GaussianBackground))
+    {
+        return new GaussianBackground(id, layers, options);
+    }
+
 	this.canvas;
 	this.context;
 
@@ -233,9 +238,14 @@ GaussianBackground.prototype.updateOptions = function(options)
         this.options[key] = options[key];
     }
 
-    /**
-     * UPDATE RENDER OPTIONS
-     */
+    // Destroy possible debug window
+    if (document.getElementById(this.canvas.id + 'DebugDisplay'))
+    {
+        var debugDisplay = document.getElementById(this.canvas.id + 'DebugDisplay');
+        debugDisplay.parentNode.removeChild(debugDisplay);
+    }
+
+    // Update rendering options
     this.timestep = 1000.00 / parseFloat(this.options.fpsCap);
 
     this.canvas.width = this.options.renderWidth;

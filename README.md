@@ -1,10 +1,10 @@
-# Gausian Background Generator (Version 0.3)
+# Gausian Background Generator (Version 0.4)
 A script which creates a gaussian blur effect background using a canvas element. The effect is similar to that seen in various gaussian background images, however, this script generates the effect dynamically and includes a plesant animation.
 
 Script example (http://foxx.io/gaussian/).
 
 ## How it Works
-The script works by cutting circles from multiple stacked canvas layers and then applying a blur effect to result. This can be easily understood when the blur effect is removed (http://foxx.io/gaussiannoblur/).
+The script works by cutting circles from multiple stacked canvas layers and then applying a blur effect to the result. This can be easily understood when the blur effect is removed (http://foxx.io/gaussiannoblur/).
 
 ## Requirements
 If blur is enabled, the script relies on Mario Klingemanns StackBlur, FastBlur, IntegralBlur or StackBoxBlur plugin (http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html).
@@ -32,7 +32,7 @@ var layers = {
     1 : { color : '#000000' }
 };
 ```
-The parameters 'splitX' and 'splitY' can be used to split the layer into columns and rows to encourage more consistent background generation.
+The parameters 'splitX' and 'splitY' can be used to split the layer orbs into columns and rows to encourage more consistent background generation.
 
 ### Options
 
@@ -77,10 +77,11 @@ background.updateOptions(options);
 - Blur iterations are only compatible with the render methods 'fastblur', 'integralblur' and 'stackboxblur'.
 - It is better to use a lower render width/height due to performance. Because of the bluring the quality will appear almost identical once scaled up.
 
-## Outstanding Issues
+## Browser Compatibility
+The plugin has been tested and is working in all major web browsers, and supports IE9 and above. IE8 compatibility is made incredibly difficult due to StackBlur not supporting IE8 (If anyone could find a way around this that would be tremendous).
+
+## Future Development
 - Possibly add a some sort of performance scaling if FPS drops below the FPS cap
-- Profile and improve performance
-- Ensure browser compatibility
 
 ## License
 All code is free to use and distribute under MIT License unless otherwise specified.

@@ -2,7 +2,7 @@
 
 Gaussian Background Generator
 
-Version:    0.3
+Version:    0.4
 Author:     Aiden Foxx
 Contact:    admin@foxx.io
 Website:    http://foxx.io/gaussian
@@ -12,6 +12,32 @@ Twitter:    @furiousfoxx
 
 'use strict';
 
+/**
+ * RAF SHIV
+ */
+(function() {
+    var requestAnimationFrame = window.requestAnimationFrame || 
+                                window.webkitRequestAnimationFrame ||
+                                window.mozRequestAnimationFrame;                                
+    var cancelAnimationFrame  = window.cancelAnimationFrame || 
+                                window.webkitCancelAnimationFrame ||
+                                window.webkitCancelRequestAnimationFrame ||
+                                window.mozCancelAnimationFrame;
+
+    // Fallback if RAF is not supported
+    if (!requestAnimationFrame || !cancelAnimationFrame)
+    {
+        requestAnimationFrame = function(callback) { return window.setTimeout(function() { callback(); }, 1); }
+        cancelAnimationFrame = function(id) { window.clearTimeout(id); }
+    }
+
+    window.requestAnimationFrame = requestAnimationFrame;
+    window.cancelAnimationFrame = cancelAnimationFrame;
+})();
+
+/**
+ * CONSTRUCTOR
+ */
 function GaussianBackground(id, layers, options)
 {
     if (!(this instanceof GaussianBackground))
@@ -59,8 +85,8 @@ function GaussianBackground(id, layers, options)
     this.firstCallTime = Date.now();
     this.lastCallTime = this.firstCallTime;
 
-    cancelAnimationFrame(this.animationFrame);
-    this.animationFrame = requestAnimationFrame(this.displayLoop.bind(this));
+    window.cancelAnimationFrame(this.animationFrame);
+    this.animationFrame = window.requestAnimationFrame(this.displayLoop.bind(this));
 }
 
 /**
@@ -76,7 +102,6 @@ GaussianBackground.prototype.generateLayer = function(orbs, radius, maxVelocity,
     var layer = {
         orbs : {},
         color : color,
-        canvas : canvas,
         context : canvas.getContext('2d')
     };
 
@@ -137,7 +162,7 @@ GaussianBackground.prototype.displayLoop = function()
     // Keep going if the user wants animation
     if (this.options.animation)
     {
-       this.animationFrame = requestAnimationFrame(this.displayLoop.bind(this));
+       this.animationFrame = window.requestAnimationFrame(this.displayLoop.bind(this));
     }
 
     var currentTime = Date.now();
@@ -170,7 +195,6 @@ GaussianBackground.prototype.drawBackground = function()
 {
     for (var i = Object.keys(this.layers).length - 1; i >= 0; i--)
     {
-        var layerCanvas = this.layers[i].canvas;
         var layerContext = this.layers[i].context;
         var layerOrbs = this.layers[i].orbs;
 
@@ -236,7 +260,7 @@ GaussianBackground.prototype.drawBackground = function()
         }
 
         // Draw the virtual canvas layer onto the main canvas
-        this.context.drawImage(layerCanvas, 0, 0);
+        this.context.drawImage(layerContext.canvas, 0, 0);
     }
 }
 
@@ -264,7 +288,6 @@ GaussianBackground.prototype.drawBlur = function()
 
 GaussianBackground.prototype.debug = function()
 {
-    this.debugLayerBoundaries();
     if (!document.getElementById(this.context.canvas.id + 'DebugDisplay'))
     {                   
         var debugDisplay = document.createElement('div');
@@ -278,6 +301,7 @@ GaussianBackground.prototype.debug = function()
         document.getElementsByTagName('body')[0].appendChild(debugDisplay);
     }
     document.getElementById(this.context.canvas.id + 'DebugDisplay').innerHTML = this.debugDisplay();
+    this.debugLayerBoundaries();
 
 }
 
@@ -359,11 +383,11 @@ GaussianBackground.prototype.updateOptions = function(options)
 
 GaussianBackground.prototype.pause = function()
 {
-    cancelAnimationFrame(this.animationFrame);
+    window.cancelAnimationFrame(this.animationFrame);
 }
 
 GaussianBackground.prototype.play = function()
 {
-    cancelAnimationFrame(this.animationFrame);
-    this.animationFrame = requestAnimationFrame(this.displayLoop.bind(this));
+    window.cancelAnimationFrame(this.animationFrame);
+    this.animationFrame = window.requestAnimationFrame(this.displayLoop.bind(this));
 }

@@ -19,33 +19,32 @@ function GaussianBackground(id, layers, options)
         return new GaussianBackground(id, layers, options);
     }
 
-	this.canvas;
-	this.context;
+    this.context = null;
 
-	this.animationFrame;
-	this.timestep = 0;
-	this.firstCallTime = 0;
-	this.lastCallTime = 0;
-	this.timeElapsed = 0;
+    this.animationFrame = null;
+    this.timestep = 0;
+    this.firstCallTime = 0;
+    this.lastCallTime = 0;
+    this.timeElapsed = 0;
 
-	this.fpsAverage = 0;
-	this.fpsTotal = 0;
+    this.fpsAverage = 0;
+    this.fpsTotal = 0;
 
-	this.layers = {};
+    this.layers = {};
 
-	this.options = {
-	    debug : false,
-	    blur : true,
-	    blurRadius : 50,
-	    blurMethod : 'stackblur',
-	    blurIterations : 0,
-	    animation : true,
-	    fpsCap : 20,
-	    renderWidth : 320,
-	    renderHeight : 130
-	};
+    this.options = {
+        debug : false,
+        blur : true,
+        blurRadius : 50,
+        blurMethod : 'stackblur',
+        blurIterations : 0,
+        animation : true,
+        fpsCap : 20,
+        renderWidth : 320,
+        renderHeight : 130
+    };
 
-    if (!(this.canvas = document.getElementById(id)) || !(this.context = this.canvas.getContext('2d')))
+    if (!(this.context = document.getElementById(id).getContext('2d')))
     {
         console.log('ERROR: Could not load canvas');
         return false;
@@ -54,8 +53,8 @@ function GaussianBackground(id, layers, options)
     this.updateOptions(options);
     this.updateLayers(layers);
 
-    this.canvas.width = this.options.renderWidth;
-    this.canvas.height = this.options.renderHeight;
+    this.context.canvas.width = this.options.renderWidth;
+    this.context.canvas.height = this.options.renderHeight;
 
     this.firstCallTime = Date.now();
     this.lastCallTime = this.firstCallTime;
@@ -67,7 +66,7 @@ function GaussianBackground(id, layers, options)
 /**
  * PUBLIC METHODS
  */
-GaussianBackground.prototype.generateLayer = function(orbs, radius, maxVelocity, color)
+GaussianBackground.prototype.generateLayer = function(orbs, radius, maxVelocity, color, splitX, splitY)
 {
     var canvas = document.createElement('canvas');
 
@@ -81,15 +80,52 @@ GaussianBackground.prototype.generateLayer = function(orbs, radius, maxVelocity,
         context : canvas.getContext('2d')
     };
 
-    for (var i = orbs - 1; i >= 0; i--)
+    var columnIndex = 0;
+    var rowIndex = 0;
+
+    for (var i = 0; i < orbs; i++)
     {
+        if (splitX)
+        {
+            var minX = (this.options.renderWidth / splitX) * columnIndex;
+            var maxX = (this.options.renderWidth / splitX) * (columnIndex + 1);
+            var minY = 0;
+            var maxY = this.options.renderHeight;
+
+            columnIndex++;
+        }
+
+        if (splitY)
+        {
+            var minX = minX ? minX : 0;
+            var maxX = maxX ? maxX : this.options.renderWidth;
+            var minY = (this.options.renderHeight / splitY) * rowIndex;
+            var maxY = (this.options.renderHeight / splitY) * (rowIndex + 1);
+        }
+
+        if (columnIndex === splitX)
+        {
+            columnIndex = 0;
+            rowIndex++;
+        }
+
+        if (rowIndex === splitY)
+        {
+            rowIndex = 0;
+        }
+
         layer.orbs[i] = {
             radius : radius,
-            posX : Math.round(Math.random() * this.options.renderWidth),
-            posY : Math.round(Math.random() * this.options.renderHeight),
+            posX : splitX ? (Math.random() * maxX) + minX : Math.random() * this.options.renderWidth,
+            posY : splitY ? (Math.random() * maxY) + minY : Math.random() * this.options.renderHeight,
             // Give is a random velocity to make the animation a bit more interesting
             velX : Math.round(Math.random()) ? Math.random() * maxVelocity : -(Math.random() * maxVelocity), 
-            velY : Math.round(Math.random()) ? Math.random() * maxVelocity : -(Math.random() * maxVelocity)
+            velY : Math.round(Math.random()) ? Math.random() * maxVelocity : -(Math.random() * maxVelocity),
+            // Custom boundaries can be used to create more consistent backgrounds
+            minX : minX,
+            maxX : maxX,
+            minY : minY,
+            maxY : maxY
         };
     }
 
@@ -122,7 +158,7 @@ GaussianBackground.prototype.displayLoop = function()
         {
             this.drawBlur();
         }
-        
+
         if (this.options.debug)
         {
             this.debug();
@@ -149,11 +185,47 @@ GaussianBackground.prototype.drawBackground = function()
             layerOrbs[x].posX += layerOrbs[x].velX;
             layerOrbs[x].posY += layerOrbs[x].velY;
 
-            // If the orb is leaving the viweport reverse it
-            if (layerOrbs[x].posX >= this.options.renderWidth || layerOrbs[x].posX <= 0)
+            // Check if the orb has custom boundaries
+            if (layerOrbs[x].maxX && layerOrbs[x].maxY)
+            {
+                var minX = layerOrbs[x].minX;
+                var maxX = layerOrbs[x].maxX;
+                
+                var minY = layerOrbs[x].minY;
+                var maxY = layerOrbs[x].maxY;
+            }
+            else
+            {
+                var minX = 0;
+                var maxX = this.options.renderWidth;
+
+                var minY = 0;
+                var maxY = this.options.renderHeight;
+            }
+
+            // Collision detection and correction
+            if (layerOrbs[x].posX >= maxX)
+            {
+                layerOrbs[x].posX = maxX;
                 layerOrbs[x].velX = -layerOrbs[x].velX;
-            if (layerOrbs[x].posY >= this.options.renderHeight || layerOrbs[x].posY <= 0)
+            }
+            else if (layerOrbs[x].posX <= minX)
+            {
+                layerOrbs[x].posX = minX;
+                layerOrbs[x].velX = -layerOrbs[x].velX;
+            }
+            
+            if (layerOrbs[x].posY >= maxY)
+            {
+                layerOrbs[x].posY = maxY;
                 layerOrbs[x].velY = -layerOrbs[x].velY;
+            }
+            else if (layerOrbs[x].posY <= minY)
+            {
+                layerOrbs[x].posY = minY;
+                layerOrbs[x].velY = -layerOrbs[x].velY;
+            }
+  
 
             layerContext.save();
             layerContext.globalCompositeOperation = 'destination-out';
@@ -173,29 +245,30 @@ GaussianBackground.prototype.drawBlur = function()
     switch (this.options.blurMethod)
     {
         case 'stackblur':
-            stackBlurCanvasRGB(this.canvas.id, 0, 0, this.options.renderWidth, this.options.renderHeight, this.options.blurRadius);
+            stackBlurCanvasRGB(this.context.canvas.id, 0, 0, this.options.renderWidth, this.options.renderHeight, this.options.blurRadius);
             break;
 
         case 'fastblur':
-            boxBlurCanvasRGB(this.canvas.id, 0, 0, this.options.renderWidth, this.options.renderHeight, this.options.blurRadius, this.options.blurIterations);
+            boxBlurCanvasRGB(this.context.canvas.id, 0, 0, this.options.renderWidth, this.options.renderHeight, this.options.blurRadius, this.options.blurIterations);
             break;
 
         case 'integralblur':
-            integralBlurCanvasRGB(this.canvas.id, 0, 0, this.options.renderWidth, this.options.renderHeight, this.options.blurRadius, this.options.blurIterations);
+            integralBlurCanvasRGB(this.context.canvas.id, 0, 0, this.options.renderWidth, this.options.renderHeight, this.options.blurRadius, this.options.blurIterations);
             break;
 
         case 'stackboxblur':
-            stackBoxBlurCanvasRGB(this.canvas.id, 0, 0, this.options.renderWidth, this.options.renderHeight, this.options.blurRadius, this.options.blurIterations);
+            stackBoxBlurCanvasRGB(this.context.canvas.id, 0, 0, this.options.renderWidth, this.options.renderHeight, this.options.blurRadius, this.options.blurIterations);
             break;
     }
 }
 
 GaussianBackground.prototype.debug = function()
 {
-    if (!document.getElementById(this.canvas.id + 'DebugDisplay'))
+    this.debugLayerBoundaries();
+    if (!document.getElementById(this.context.canvas.id + 'DebugDisplay'))
     {                   
         var debugDisplay = document.createElement('div');
-        debugDisplay.id = this.canvas.id + 'DebugDisplay';
+        debugDisplay.id = this.context.canvas.id + 'DebugDisplay';
         debugDisplay.style.position = 'fixed';
         debugDisplay.style.bottom = '10px';
         debugDisplay.style.left = '10px';
@@ -204,7 +277,8 @@ GaussianBackground.prototype.debug = function()
 
         document.getElementsByTagName('body')[0].appendChild(debugDisplay);
     }
-    document.getElementById(this.canvas.id + 'DebugDisplay').innerHTML = this.debugDisplay();
+    document.getElementById(this.context.canvas.id + 'DebugDisplay').innerHTML = this.debugDisplay();
+
 }
 
 GaussianBackground.prototype.debugDisplay = function()
@@ -220,6 +294,28 @@ GaussianBackground.prototype.debugDisplay = function()
            (this.options.blur ? '<br />Blur Iterations: ' + this.options.blurIterations : '');
 }
 
+GaussianBackground.prototype.debugLayerBoundaries = function()
+{
+    for (var i = Object.keys(this.layers).length - 1; i >= 0; i--)
+    {
+        var context = this.layers[i].context;
+        var layerOrbs = this.layers[i].orbs;
+        var layerColorHash = (Object.keys(layerOrbs).length + '' + (i + 1)) / 100;
+
+        for (var x = Object.keys(layerOrbs).length - 1; x >= 0; x--)
+        {
+            if (layerOrbs[x].maxX && layerOrbs[x].maxY)
+            {
+                this.context.beginPath();
+                this.context.lineWidth = '1';
+                this.context.strokeStyle = "#" + (layerColorHash * 0xFFFFFF << 0).toString(16);
+                this.context.rect(layerOrbs[x].minX, layerOrbs[x].minY, layerOrbs[x].maxX - layerOrbs[x].minX, layerOrbs[x].maxY - layerOrbs[x].minY); 
+                this.context.stroke(); 
+            }
+        }
+    }
+}
+
 GaussianBackground.prototype.updateLayers = function(layers)
 {
     // Empty previous layers
@@ -227,7 +323,7 @@ GaussianBackground.prototype.updateLayers = function(layers)
 
     for (var i = Object.keys(layers).length - 1; i >= 0; i--)
     {
-        this.layers[i] = this.generateLayer(layers[i].orbs, layers[i].radius, layers[i].maxVelocity, layers[i].color)
+        this.layers[i] = this.generateLayer(layers[i].orbs, layers[i].radius, layers[i].maxVelocity, layers[i].color, layers[i].splitX, layers[i].splitY)
     }
 }
 
@@ -239,17 +335,17 @@ GaussianBackground.prototype.updateOptions = function(options)
     }
 
     // Destroy possible debug window
-    if (document.getElementById(this.canvas.id + 'DebugDisplay'))
+    if (document.getElementById(this.context.canvas.id + 'DebugDisplay'))
     {
-        var debugDisplay = document.getElementById(this.canvas.id + 'DebugDisplay');
+        var debugDisplay = document.getElementById(this.context.canvas.id + 'DebugDisplay');
         debugDisplay.parentNode.removeChild(debugDisplay);
     }
 
     // Update rendering options
     this.timestep = 1000.00 / parseFloat(this.options.fpsCap);
 
-    this.canvas.width = this.options.renderWidth;
-    this.canvas.height = this.options.renderHeight;
+    this.context.canvas.width = this.options.renderWidth;
+    this.context.canvas.height = this.options.renderHeight;
 
     for (var i = Object.keys(this.layers).length - 1; i >= 0; i--)
     {

@@ -15,22 +15,26 @@ The script accepts a number of parameters:
 ```javascript
 var background = GaussianBackground(elementID, layers, options);
 ```
+### Layers
 
 The layers parameter requires an array/object of display layers using the following syntax:
 
 ```javascript
 var layers = [
-    { orbs : 2, radius : 130, maxVelocity : 1, color : '#333333' },
+    { orbs : 2, radius : 130, maxVelocity : 1, color : '#333333', splitX : 0, splitY : 0 },
     { color : '#000000' }
 ];
 
 OR
 
 var layers = {
-    0 : { orbs : 2, radius : 130, maxVelocity : 1, color : '#333333' },
+    0 : { orbs : 2, radius : 130, maxVelocity : 1, color : '#333333', splitX : 0, splitY : 0 },
     1 : { color : '#000000' }
 };
 ```
+The parameters 'splitX' and 'splitY' can be used to split the layer into columns and rows to encourage more consistent background generation.
+
+### Options
 
 All avalible options are:
 

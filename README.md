@@ -1,4 +1,4 @@
-# Gausian Background Generator (Version 0.2)
+# Gausian Background Generator (Version 0.3)
 A script which creates a gaussian blur effect background using a canvas element. The effect is similar to that seen in various gaussian background images, however, this script generates the effect dynamically and includes a plesant animation.
 
 Script example (http://foxx.io/gaussian/).
@@ -78,7 +78,7 @@ background.updateOptions(options);
 - It is better to use a lower render width/height due to performance. Because of the bluring the quality will appear almost identical once scaled up.
 
 ## Outstanding Issues
-- Possibly add a some sort of performance scaling if FPS drops below the FPS cap.
+- Possibly add a some sort of performance scaling if FPS drops below the FPS cap
 - Profile and improve performance
 - Ensure browser compatibility
 

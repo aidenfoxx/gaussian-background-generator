@@ -1,4 +1,4 @@
-# Gausian Background Generator (Version 0.4)
+# Gausian Background Generator (Version 0.4.1)
 A script which creates a gaussian blur effect background using a canvas element. The effect is similar to that seen in various gaussian background images, however, this script generates the effect dynamically and includes a plesant animation.
 
 Script example (http://foxx.io/gaussian/).
@@ -21,18 +21,18 @@ The layers parameter requires an array/object of display layers using the follow
 
 ```javascript
 var layers = [
-    { orbs : 2, radius : 130, maxVelocity : 1, color : '#333333', splitX : 0, splitY : 0 },
+    { orbs : 2, radius : 130, maxVelocity : 1, color : '#333333', columns : 0, rows : 0 },
     { color : '#000000' }
 ];
 
 OR
 
 var layers = {
-    0 : { orbs : 2, radius : 130, maxVelocity : 1, color : '#333333', splitX : 0, splitY : 0 },
+    0 : { orbs : 2, radius : 130, maxVelocity : 1, color : '#333333', columns : 0, rows : 0 },
     1 : { color : '#000000' }
 };
 ```
-The parameters 'splitX' and 'splitY' can be used to split the layer orbs into columns and rows to encourage more consistent background generation.
+The parameters 'columns' and 'rows' can be used to split the layer orbs into columns and rows to encourage more consistent background generation.
 
 ### Options
 
@@ -65,7 +65,10 @@ background.pause();
 // Play the animation
 background.play();
 
-// Update the display layers of the object
+// Recalculate the current animation layers
+background.refreshLayers(layers);
+
+// Pass a new array of layers to be rendered
 background.updateLayers(layers);
 
 // Update the options of the object

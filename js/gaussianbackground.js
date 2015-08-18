@@ -1,14 +1,13 @@
-/*
-
-Gaussian Background Generator
-
-Version:    0.4
-Author:     Aiden Foxx
-Contact:    admin@foxx.io
-Website:    http://foxx.io/gaussian
-Twitter:    @furiousfoxx
-
-*/
+/** 
+ * Gaussian Background Generator 
+ * 
+ * @version    0.4.1
+ * @author     Aiden Foxx
+ * @license    MIT License 
+ * @copyright  2015 Aiden Foxx
+ * @link       http://github.com/aidenfoxx
+ * @twitter    @furiousfoxx
+ */ 
 
 'use strict';
 
@@ -57,6 +56,7 @@ function GaussianBackground(id, layers, options)
     this.fpsTotal = 0;
 
     this.layers = {};
+    this.layersBackup = {};
 
     this.options = {
         debug : false,
@@ -92,7 +92,7 @@ function GaussianBackground(id, layers, options)
 /**
  * PUBLIC METHODS
  */
-GaussianBackground.prototype.generateLayer = function(orbs, radius, maxVelocity, color, splitX, splitY)
+GaussianBackground.prototype.generateLayer = function(orbs, radius, maxVelocity, color, columns, rows)
 {
     var canvas = document.createElement('canvas');
 
@@ -105,44 +105,46 @@ GaussianBackground.prototype.generateLayer = function(orbs, radius, maxVelocity,
         context : canvas.getContext('2d')
     };
 
+    var columnCount = columns || 0;
+    var rowCount = rows || 0;
     var columnIndex = 0;
     var rowIndex = 0;
 
     for (var i = 0; i < orbs; i++)
     {
-        if (splitX)
+        if (columnCount)
         {
-            var minX = (this.options.renderWidth / splitX) * columnIndex;
-            var maxX = (this.options.renderWidth / splitX) * (columnIndex + 1);
+            var minX = (this.options.renderWidth / columnCount) * columnIndex;
+            var maxX = (this.options.renderWidth / columnCount) * (columnIndex + 1);
             var minY = 0;
             var maxY = this.options.renderHeight;
 
             columnIndex++;
         }
 
-        if (splitY)
+        if (rowCount)
         {
             var minX = minX ? minX : 0;
             var maxX = maxX ? maxX : this.options.renderWidth;
-            var minY = (this.options.renderHeight / splitY) * rowIndex;
-            var maxY = (this.options.renderHeight / splitY) * (rowIndex + 1);
+            var minY = (this.options.renderHeight / rowCount) * rowIndex;
+            var maxY = (this.options.renderHeight / rowCount) * (rowIndex + 1);
         }
 
-        if (columnIndex === splitX)
+        if (columnIndex === columnCount)
         {
             columnIndex = 0;
             rowIndex++;
         }
 
-        if (rowIndex === splitY)
+        if (rowIndex === rowCount)
         {
             rowIndex = 0;
         }
 
         layer.orbs[i] = {
             radius : radius,
-            posX : splitX ? (Math.random() * maxX) + minX : Math.random() * this.options.renderWidth,
-            posY : splitY ? (Math.random() * maxY) + minY : Math.random() * this.options.renderHeight,
+            posX : columns ? (Math.random() * maxX) + minX : Math.random() * this.options.renderWidth,
+            posY : rows ? (Math.random() * maxY) + minY : Math.random() * this.options.renderHeight,
             // Give is a random velocity to make the animation a bit more interesting
             velX : Math.round(Math.random()) ? Math.random() * maxVelocity : -(Math.random() * maxVelocity), 
             velY : Math.round(Math.random()) ? Math.random() * maxVelocity : -(Math.random() * maxVelocity),
@@ -214,7 +216,6 @@ GaussianBackground.prototype.drawBackground = function()
             {
                 var minX = layerOrbs[x].minX;
                 var maxX = layerOrbs[x].maxX;
-                
                 var minY = layerOrbs[x].minY;
                 var maxY = layerOrbs[x].maxY;
             }
@@ -222,7 +223,6 @@ GaussianBackground.prototype.drawBackground = function()
             {
                 var minX = 0;
                 var maxX = this.options.renderWidth;
-
                 var minY = 0;
                 var maxY = this.options.renderHeight;
             }
@@ -250,7 +250,6 @@ GaussianBackground.prototype.drawBackground = function()
                 layerOrbs[x].velY = -layerOrbs[x].velY;
             }
   
-
             layerContext.save();
             layerContext.globalCompositeOperation = 'destination-out';
             layerContext.beginPath();
@@ -324,7 +323,7 @@ GaussianBackground.prototype.debugLayerBoundaries = function()
     {
         var context = this.layers[i].context;
         var layerOrbs = this.layers[i].orbs;
-        var layerColorHash = (Object.keys(layerOrbs).length + '' + (i + 1)) / 100;
+        var layerColorHash = parseInt(Object.keys(layerOrbs).length + '' + (i + 1)) / 100;
 
         for (var x = Object.keys(layerOrbs).length - 1; x >= 0; x--)
         {
@@ -340,14 +339,20 @@ GaussianBackground.prototype.debugLayerBoundaries = function()
     }
 }
 
+GaussianBackground.prototype.refreshLayers = function()
+{
+    this.updateLayers(this.layersBackup);
+}
+
 GaussianBackground.prototype.updateLayers = function(layers)
 {
     // Empty previous layers
-    this.layers = {};
+    this.layers = { };
+    this.layersBackup = JSON.parse(JSON.stringify(layers));
 
     for (var i = Object.keys(layers).length - 1; i >= 0; i--)
     {
-        this.layers[i] = this.generateLayer(layers[i].orbs, layers[i].radius, layers[i].maxVelocity, layers[i].color, layers[i].splitX, layers[i].splitY)
+        this.layers[i] = this.generateLayer(layers[i].orbs, layers[i].radius, layers[i].maxVelocity, layers[i].color, layers[i].columns, layers[i].rows)
     }
 }
 
@@ -371,11 +376,7 @@ GaussianBackground.prototype.updateOptions = function(options)
     this.context.canvas.width = this.options.renderWidth;
     this.context.canvas.height = this.options.renderHeight;
 
-    for (var i = Object.keys(this.layers).length - 1; i >= 0; i--)
-    {
-        this.layers[i].canvas.width = this.options.renderWidth;
-        this.layers[i].canvas.height = this.options.renderHeight;
-    }
+    this.refreshLayers();
 
     // May need a restart if animation was changed
     this.play();

@@ -65,10 +65,10 @@ background.pause();
 // Play the animation
 background.play();
 
-// Recalculate the current animation layers
+// Recalculate the current layers
 background.refreshLayers(layers);
 
-// Pass a new array of layers to be rendered
+// Pass an array of new layers to be rendered
 background.updateLayers(layers);
 
 // Update the options of the object

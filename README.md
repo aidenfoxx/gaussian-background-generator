@@ -1,5 +1,5 @@
 # Gaussian Background Generator (Version 0.4.1)
-A script which creates a gaussian blur effect background using a canvas element. The effect is similar to that seen in various gaussian background images, however, this script generates the effect dynamically and includes a plesant animation.
+A script which creates a gaussian blur effect background using a canvas element. The effect is similar to that seen in various gaussian background images, however, this script generates the effect dynamically and includes a pleasant animation.
 
 Script example (http://foxx.io/gaussian/).
 
@@ -78,7 +78,7 @@ background.updateOptions(options);
 ### Notes:
 - Layers will be rendered with the first layer at the front and the last at the back.
 - Blur iterations are only compatible with the render methods 'fastblur', 'integralblur' and 'stackboxblur'.
-- It is better to use a lower render width/height due to performance. Because of the bluring the quality will appear almost identical once scaled up.
+- It is better to use a lower render width/height due to performance. Because of the blurring the quality will appear almost identical once scaled up.
 
 ## Browser Compatibility
 The plugin has been tested and is working in all major web browsers, and supports IE9 and above. IE8 compatibility is made incredibly difficult due to StackBlur not supporting IE8 (If anyone could find a way around this that would be tremendous).

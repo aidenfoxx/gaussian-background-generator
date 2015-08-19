@@ -145,8 +145,8 @@ GaussianBackground.prototype.generateLayer = function(orbs, radius, maxVelocity,
 
         layer.orbs[i] = {
             radius : radius,
-            posX : columns ? (Math.random() * maxX) + minX : Math.random() * this.options.renderWidth,
-            posY : rows ? (Math.random() * maxY) + minY : Math.random() * this.options.renderHeight,
+            posX : (Math.random() * maxX) + minX,
+            posY : (Math.random() * maxY) + minY,
             // Give is a random velocity to make the animation a bit more interesting
             velX : Math.round(Math.random()) ? Math.random() * maxVelocity : -(Math.random() * maxVelocity), 
             velY : Math.round(Math.random()) ? Math.random() * maxVelocity : -(Math.random() * maxVelocity),

@@ -112,30 +112,32 @@ GaussianBackground.prototype.generateLayer = function(orbs, radius, maxVelocity,
 
     for (var i = 0; i < orbs; i++)
     {
+        // Default boundaries
+        var minX = 0;
+        var maxX = this.options.renderWidth;
+        var minY = 0;
+        var maxY = this.options.renderHeight;
+
+        // Custom boundaries
         if (columnCount)
         {
-            var minX = (this.options.renderWidth / columnCount) * columnIndex;
-            var maxX = (this.options.renderWidth / columnCount) * (columnIndex + 1);
-            var minY = 0;
-            var maxY = this.options.renderHeight;
+            minX = (this.options.renderWidth / columnCount) * columnIndex;
+            maxX = (this.options.renderWidth / columnCount) * (columnIndex + 1);
 
             columnIndex++;
         }
-
         if (rowCount)
         {
-            var minX = minX ? minX : 0;
-            var maxX = maxX ? maxX : this.options.renderWidth;
-            var minY = (this.options.renderHeight / rowCount) * rowIndex;
-            var maxY = (this.options.renderHeight / rowCount) * (rowIndex + 1);
+            minY = (this.options.renderHeight / rowCount) * rowIndex;
+            maxY = (this.options.renderHeight / rowCount) * (rowIndex + 1);
         }
 
+        // Orb position tracking
         if (columnIndex === columnCount)
         {
             columnIndex = 0;
             rowIndex++;
         }
-
         if (rowIndex === rowCount)
         {
             rowIndex = 0;
@@ -211,42 +213,26 @@ GaussianBackground.prototype.drawBackground = function()
             layerOrbs[x].posX += layerOrbs[x].velX;
             layerOrbs[x].posY += layerOrbs[x].velY;
 
-            // Check if the orb has custom boundaries
-            if (layerOrbs[x].maxX && layerOrbs[x].maxY)
-            {
-                var minX = layerOrbs[x].minX;
-                var maxX = layerOrbs[x].maxX;
-                var minY = layerOrbs[x].minY;
-                var maxY = layerOrbs[x].maxY;
-            }
-            else
-            {
-                var minX = 0;
-                var maxX = this.options.renderWidth;
-                var minY = 0;
-                var maxY = this.options.renderHeight;
-            }
-
             // Collision detection and correction
-            if (layerOrbs[x].posX >= maxX)
+            if (layerOrbs[x].posX >= layerOrbs[x].maxX)
             {
-                layerOrbs[x].posX = maxX;
+                layerOrbs[x].posX = layerOrbs[x].maxX;
                 layerOrbs[x].velX = -layerOrbs[x].velX;
             }
-            else if (layerOrbs[x].posX <= minX)
+            else if (layerOrbs[x].posX <= layerOrbs[x].minX)
             {
-                layerOrbs[x].posX = minX;
+                layerOrbs[x].posX = layerOrbs[x].minX;
                 layerOrbs[x].velX = -layerOrbs[x].velX;
             }
             
-            if (layerOrbs[x].posY >= maxY)
+            if (layerOrbs[x].posY >= layerOrbs[x].maxY)
             {
-                layerOrbs[x].posY = maxY;
+                layerOrbs[x].posY = layerOrbs[x].maxY;
                 layerOrbs[x].velY = -layerOrbs[x].velY;
             }
-            else if (layerOrbs[x].posY <= minY)
+            else if (layerOrbs[x].posY <= layerOrbs[x].minY)
             {
-                layerOrbs[x].posY = minY;
+                layerOrbs[x].posY = layerOrbs[x].minY;
                 layerOrbs[x].velY = -layerOrbs[x].velY;
             }
   

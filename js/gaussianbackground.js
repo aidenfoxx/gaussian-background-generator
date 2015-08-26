@@ -1,7 +1,7 @@
 /** 
  * Gaussian Background Generator 
  * 
- * @version    0.4.1
+ * @version    0.5.0
  * @author     Aiden Foxx
  * @license    MIT License 
  * @copyright  2015 Aiden Foxx
@@ -14,11 +14,11 @@
 /**
  * CONSTRUCTOR
  */
-function GaussianBackground(id, layers, options)
+function GaussianBackground(element, layers, options)
 {
     if (!(this instanceof GaussianBackground))
     {
-        return new GaussianBackground(id, layers, options);
+        return new GaussianBackground(element, layers, options);
     }
 
     this.context = null;
@@ -47,7 +47,7 @@ function GaussianBackground(id, layers, options)
         renderHeight : 130
     };
 
-    if (!(this.context = document.getElementById(id).getContext('2d')))
+    if (!(this.context = element.getContext('2d')))
     {
         console.log('ERROR: Could not load canvas');
         return false;

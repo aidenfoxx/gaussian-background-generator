@@ -16,7 +16,6 @@
 			height: 100%;
 			padding: 0;
 			margin: 0;
-			float: left;
 		}
 	</style>
 	<script src="./js/vendor/stackblur.js"></script>
@@ -53,7 +52,7 @@
 
 			var colorArray = [blue, purple, red];
 
-			gaussianBackground = GaussianBackground('background', colorArray[Math.floor(Math.random() * colorArray.length)], {
+			gaussianBackground = GaussianBackground(document.getElementById('background'), colorArray[Math.floor(Math.random() * colorArray.length)], {
 				renderWidth : 75, 
 				renderHeight : 50, 
 				blurRadius : 15, 

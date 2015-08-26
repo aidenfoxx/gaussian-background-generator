@@ -1,4 +1,4 @@
-# Gaussian Background Generator (Version 0.4.1)
+# Gaussian Background Generator (Version 0.5.0)
 A script which creates a gaussian blur effect background using a canvas element. The effect is similar to that seen in various gaussian background images, however, this script generates the effect dynamically and includes a pleasant animation.
 
 Script example (http://foxx.io/gaussian/).
@@ -13,7 +13,9 @@ If blur is enabled, the script relies on Mario Klingemanns StackBlur, FastBlur, 
 The script accepts a number of parameters:
 
 ```javascript
-var background = GaussianBackground(elementID, layers, options);
+var element = document.getElementById('element');
+
+var background = GaussianBackground(element, layers, options);
 ```
 ### Layers
 
@@ -57,7 +59,7 @@ var options = {
 The created object has a number of public methods:
 
 ```javascript
-var background = GaussianBackground(elementID, layers, options);
+var background = GaussianBackground(element, layers, options);
 
 // Pauses the animation
 background.pause();

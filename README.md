@@ -68,7 +68,7 @@ background.pause();
 background.play();
 
 // Recalculate the current layers
-background.refreshLayers(layers);
+background.refreshLayers();
 
 // Pass an array of new layers to be rendered
 background.updateLayers(layers);

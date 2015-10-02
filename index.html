@@ -23,40 +23,40 @@
 	<!--<script src="./js/vendor/integralblur.js"></script>-->
 	<!--<script src="./js/vendor/stackboxblur.js"></script>-->
 	<script src="./js/raf.js"></script>
-	<script src="./js/gaussianbackground.js"></script>
+	<script src="./js/gaussianbackground.production.js"></script>
 	<script>
 		var gaussianBackground;
 
 		function load()
 		{
 			var blue = [
-				{ orbs : 4, radius : 20, maxVelocity : .2, color : '#245ca7', columns : 2 },
-				{ orbs : 5, radius : 15, maxVelocity : .2, color : '#2176c7' },
-				{ orbs : 7, radius : 12, maxVelocity : .2, color : '#149dee' },
-				{ color : '#b6d7fd' }
+				{ orbs: 4, radius: 20, maxVelocity: .2, color: '#245ca7', columns: 2 },
+				{ orbs: 5, radius: 15, maxVelocity: .2, color: '#2176c7' },
+				{ orbs: 7, radius: 12, maxVelocity: .2, color: '#149dee' },
+				{ color: '#b6d7fd' }
 			];
 
 			var purple = [
-				{ orbs : 4, radius : 20, maxVelocity : .2, color : '#3e1969', columns : 2 },
-				{ orbs : 5, radius : 15, maxVelocity : .2, color : '#6f2b9b' },
-				{ orbs : 8, radius : 10, maxVelocity : .2, color : '#9f3da0' },
-				{ color : '#c292e8' }
+				{ orbs: 4, radius: 20, maxVelocity: .2, color: '#3e1969', columns: 2 },
+				{ orbs: 5, radius: 15, maxVelocity: .2, color: '#6f2b9b' },
+				{ orbs: 8, radius: 10, maxVelocity: .2, color: '#9f3da0' },
+				{ color: '#c292e8' }
 			];
 
 			var red = [
-				{ orbs : 4, radius : 20, maxVelocity : .2, color : '#710512', columns : 2 },
-				{ orbs : 5, radius : 15, maxVelocity : .2, color : '#b32d45' },
-				{ orbs : 8, radius : 10, maxVelocity : .2, color : '#ce534b' },
-				{ color : '#f4b685' }
+				{ orbs: 4, radius: 20, maxVelocity: .2, color: '#710512', columns: 2 },
+				{ orbs: 5, radius: 15, maxVelocity: .2, color: '#b32d45' },
+				{ orbs: 8, radius: 10, maxVelocity: .2, color: '#ce534b' },
+				{ color: '#f4b685' }
 			];
 
 			var colorArray = [blue, purple, red];
 
 			gaussianBackground = GaussianBackground(document.getElementById('background'), colorArray[Math.floor(Math.random() * colorArray.length)], {
-				renderWidth : 75, 
-				renderHeight : 50, 
-				blurRadius : 15, 
-				fpsCap : 15
+				renderWidth: 75, 
+				renderHeight: 50, 
+				blurRadius: 15, 
+				fpsCap: 15
 			});
 		}
 	</script>

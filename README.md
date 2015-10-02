@@ -17,6 +17,10 @@ var element = document.getElementById('element');
 
 var background = GaussianBackground(element, layers, options);
 ```
+
+### Versions
+There are 2 version of the script avalible for use. One is a debug version, designed to allow developers to easily debug and visualise their work. The other is a production version with all debug code removed. For improved performance be sure to use the production version on live websites.
+
 ### Layers
 
 The layers parameter requires an array/object of display layers using the following syntax:
@@ -42,7 +46,7 @@ All avalible options are:
 
 ```javascript
 var options = {
-    debug : false,
+    debug : false, // Only available in the debug version
     blur : true,
     blurRadius : 50,
     blurMethod : '(stackblur|fastblur|integralblur|stackboxblur)',

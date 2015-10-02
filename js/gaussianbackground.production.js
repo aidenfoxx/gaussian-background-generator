@@ -33,7 +33,7 @@ function GaussianBackground(element, layers, options)
         blur: true,
         blurRadius: 50,
         blurMethod: 'stackblur',
-        blurIterations: 0,
+        blurIterations: 1,
         animation: true,
         fpsCap: 20,
         renderWidth: 320,

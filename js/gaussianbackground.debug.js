@@ -173,34 +173,31 @@ GaussianBackground.prototype.drawBackground = function()
         // Draw animated layer elements
         for (var x = Object.keys(layerOrbs).length - 1; x >= 0; x--)
         {
-            if (this.options.animation)
-            {
-                // Animate the movement
-                layerOrbs[x].posX += layerOrbs[x].velX;
-                layerOrbs[x].posY += layerOrbs[x].velY;
+            // Animate the movement
+            layerOrbs[x].posX += layerOrbs[x].velX;
+            layerOrbs[x].posY += layerOrbs[x].velY;
 
-                // Collision detection and correction
-                if (layerOrbs[x].posX >= layerOrbs[x].maxX)
-                {
-                    layerOrbs[x].posX = layerOrbs[x].maxX;
-                    layerOrbs[x].velX = -layerOrbs[x].velX;
-                }
-                else if (layerOrbs[x].posX <= layerOrbs[x].minX)
-                {
-                    layerOrbs[x].posX = layerOrbs[x].minX;
-                    layerOrbs[x].velX = -layerOrbs[x].velX;
-                }
-                
-                if (layerOrbs[x].posY >= layerOrbs[x].maxY)
-                {
-                    layerOrbs[x].posY = layerOrbs[x].maxY;
-                    layerOrbs[x].velY = -layerOrbs[x].velY;
-                }
-                else if (layerOrbs[x].posY <= layerOrbs[x].minY)
-                {
-                    layerOrbs[x].posY = layerOrbs[x].minY;
-                    layerOrbs[x].velY = -layerOrbs[x].velY;
-                }
+            // Collision detection and correction
+            if (layerOrbs[x].posX >= layerOrbs[x].maxX)
+            {
+                layerOrbs[x].posX = layerOrbs[x].maxX;
+                layerOrbs[x].velX = -layerOrbs[x].velX;
+            }
+            else if (layerOrbs[x].posX <= layerOrbs[x].minX)
+            {
+                layerOrbs[x].posX = layerOrbs[x].minX;
+                layerOrbs[x].velX = -layerOrbs[x].velX;
+            }
+            
+            if (layerOrbs[x].posY >= layerOrbs[x].maxY)
+            {
+                layerOrbs[x].posY = layerOrbs[x].maxY;
+                layerOrbs[x].velY = -layerOrbs[x].velY;
+            }
+            else if (layerOrbs[x].posY <= layerOrbs[x].minY)
+            {
+                layerOrbs[x].posY = layerOrbs[x].minY;
+                layerOrbs[x].velY = -layerOrbs[x].velY;
             }
   
             layerContext.save();

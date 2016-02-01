@@ -1,10 +1,10 @@
 # Gaussian Background Generator (Version 0.5.1)
 A script which creates a gaussian blur effect background using a canvas element. The effect is similar to that seen in various gaussian background images, however, this script generates the effect dynamically and includes a pleasant animation.
 
-Script example (http://foxx.io/gaussian/).
+Script example (http://projects.foxx.io/gaussian/).
 
 ## How it Works
-The script works by cutting circles from multiple stacked canvas layers and then applying a blur effect to the result. This can be easily understood when the blur effect is removed (http://foxx.io/gaussiannoblur/).
+The script works by cutting circles from multiple stacked canvas layers and then applying a blur effect to the result. This can be easily understood when the blur effect is removed (http://projects.foxx.io/gaussiannoblur/).
 
 ## Requirements
 If blur is enabled, the script relies on Mario Klingemanns StackBlur, FastBlur, IntegralBlur or StackBoxBlur plugin (http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html).

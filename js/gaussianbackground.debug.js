@@ -23,9 +23,8 @@ function GaussianBackground(element, layers, options)
 
     this.animationFrame = null;
     this.timestep = 0;
-    this.firstCallTime = 0;
-    this.lastCallTime = 0;
-    this.timeElapsed = 0;
+    this.firstCallTime = Date.now();
+    this.lastCallTime = this.firstCallTime;
 
     this.fpsAverage = 0;
     this.fpsTotal = 0;
@@ -56,9 +55,6 @@ function GaussianBackground(element, layers, options)
 
     this.context.canvas.width = this.options.renderWidth;
     this.context.canvas.height = this.options.renderHeight;
-
-    this.firstCallTime = Date.now();
-    this.lastCallTime = this.firstCallTime;
 
     this.animationFrame = window.requestAnimationFrame(this.displayLoop.bind(this));
 }
@@ -144,10 +140,8 @@ GaussianBackground.prototype.displayLoop = function()
     if (delta > this.timestep || !this.options.animation)
     {
         this.lastCallTime = currentTime - (delta % this.timestep);
-        this.timeElapsed = this.lastCallTime - this.firstCallTime;
-
         this.fpsTotal++;
-        this.fpsAverage = this.fpsTotal / (this.timeElapsed / 1000);
+        this.fpsAverage = this.fpsTotal / ((this.lastCallTime - this.firstCallTime) / 1000);
         
         this.drawBackground();
 

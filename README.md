@@ -49,7 +49,7 @@ var options = {
     debug : false, // Only available in the debug version
     blur : true,
     blurRadius : 50,
-    blurMethod : '(stackblur|fastblur|integralblur|stackboxblur)',
+    blurMethod : 'stackblur|fastblur|integralblur|stackboxblur',
     blurIterations : 1,
     animation : true,
     fpsCap : 20,
